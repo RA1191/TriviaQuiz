@@ -6,6 +6,7 @@ import com.example.quizapi.dtos.questionsdtos.QuestionDTO;
 import com.example.quizapi.dtos.questionsdtos.QuestionsDTO;
 import com.example.quizapi.dtos.questionsdtos.TriviaQuestionDTO;
 import com.example.quizapi.dtos.questionsdtos.TriviaQuestionsDTO;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.*;
 
@@ -19,12 +20,16 @@ public class QuestionConverter {
     }
 
     static  public Question TriviaQuestionDTOToQuestion(TriviaQuestionDTO triviaQuestionDTO){
+        List<String> decoded = new ArrayList<>();
+        for (String coded: triviaQuestionDTO.incorrect_answers()){
+            decoded.add(StringEscapeUtils.unescapeHtml4(coded));
+        }
         return new Question(triviaQuestionDTO.type(),
                 triviaQuestionDTO.difficulty(),
                 triviaQuestionDTO.category(),
-                triviaQuestionDTO.question(),
-                triviaQuestionDTO.correct_answer(),
-                triviaQuestionDTO.incorrect_answers()
+                StringEscapeUtils.unescapeHtml4(triviaQuestionDTO.question()),
+                StringEscapeUtils.unescapeHtml4(triviaQuestionDTO.correct_answer()),
+                decoded
         );
     }
 
